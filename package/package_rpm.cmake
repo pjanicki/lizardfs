@@ -1,3 +1,7 @@
+set_system_architecture(NO)
+set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY NO)
+set(GENERATOR "RPM")
+
 set(CPACK_RPM_COMPONENT_INSTALL YES)
 # Component-wide properties
 set(CPACK_RPM_PACKAGE_SUMMARY ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
@@ -28,4 +32,3 @@ include(client/package_rpm.cmake)
 include(common/package_rpm.cmake)
 include(master/package_rpm.cmake)
 include(metalogger/package_rpm.cmake)
-

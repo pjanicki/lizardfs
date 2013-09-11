@@ -28,44 +28,31 @@ add_definitions(-D__STDC_FORMAT_MACROS)
 set(DEFAULT_USER "mfs" CACHE STRING "Default user to run daemons as")
 set(DEFAULT_GROUP "mfs" CACHE STRING "Default group to run daemons as")
 set(ENABLE_LIGHTMFS NO CACHE BOOL "Enable light version of LizardFS")
-set(ENABLE_DEBIAN_PATHS NO CACHE BOOL "Enable Debian-style install paths")
-set(BUILD_DEB NO CACHE BOOL "Enable package building for Debian (using dpkg)")
-set(BUILD_RPM NO CACHE BOOL "Enable package building for RedHat/Fedora (using rpmbuild)")
+set(BUILD_PACKAGE CACHE STRING "Build package of given type [DEB/RPM/TGZ, default: none")
+
+if(DEFINED BUILD_PACKAGE AND NOT BUILD_PACKAGE STREQUAL "")
+  string(TOUPPER ${BUILD_PACKAGE} BUILD_PACKAGE)
+  if(NOT BUILD_PACKAGE STREQUAL "DEB" AND
+     NOT BUILD_PACKAGE STREQUAL "RPM" AND
+     NOT BUILD_PACKAGE STREQUAL "TGZ")
+    unset(BUILD_PACKAGE)
+    unset(BUILD_PACKAGE CACHE)
+  endif()
+endif()
 
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
-message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "ENABLE_LIGHTMFS: ${ENABLE_LIGHTMFS}")
-message(STATUS "ENABLE_DEBIAN_PATHS: ${ENABLE_DEBIAN_PATHS}")
-message(STATUS "BUILD_DEB: ${BUILD_DEB}")
-message(STATUS "BUILD_RPM: ${BUILD_RPM}")
+message(STATUS "BUILD_PACKAGE: ${BUILD_PACKAGE}")
 
-# Fix to sync installation prefixes to avoid problems with scripts using
-# absolute paths (eg. SBIN_PATH in init.d scripts). Without this fix depending
-# after cmake call only one make install or make package will produce proper 
-# absolute paths in output
-# set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-# if(CPACK_PACKAGING_INSTALL_PREFIX STREQUAL "")
-#   set(CPACK_PACKAGING_INSTALL_PREFIX "/.")
-# endif()
+set(BIN_SUBDIR   "bin")
+set(SBIN_SUBDIR  "sbin")
 
-# Switches
-# if(ENABLE_DEBIAN_PATHS)
-#   if (NOT CMAKE_INSTALL_PREFIX STREQUAL "/")
-#     message(WARNING "Debian paths enabled, but CMAKE_INSTALL_PREFIX is different than /")
-#   endif()
-#   set(BIN_SUBDIR   "usr/bin")
-#   set(SBIN_SUBDIR  "usr/sbin")
-# else()
-  set(BIN_SUBDIR   "bin")
-  set(SBIN_SUBDIR  "sbin")
-# endif()
+set(ETC_PATH     "/etc")
+set(RUN_PATH     "/var/run/mfs")
+set(DATA_PATH    "/var/lib/mfs")
+set(MAN_PATH     "/usr/share/man")
+set(CGI_PATH     "/usr/share/mfscgi")
 
-set(ETC_PATH   "/etc")
-set(RUN_PATH   "/var/run/mfs")
-set(DATA_PATH  "/var/lib/mfs")
-set(MAN_PATH   "/usr/share/man")
-set(CGI_PATH   "/usr/share/mfscgi")
-  
 if(ENABLE_LIGHTMFS)
   set(PROTO_BASE 65536)
   set(LIGHT_MFS 1)
@@ -99,5 +86,6 @@ if (FUSE_LIBRARY)
   add_subdirectory(mfsmount)
 endif()
 add_subdirectory(mfscgi)
-add_subdirectory(package)
-
+if (BUILD_PACKAGE)
+  add_subdirectory(package)
+endif()
