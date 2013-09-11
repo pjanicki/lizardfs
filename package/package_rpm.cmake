@@ -28,4 +28,3 @@ include(client/package_rpm.cmake)
 include(common/package_rpm.cmake)
 include(master/package_rpm.cmake)
 include(metalogger/package_rpm.cmake)
-

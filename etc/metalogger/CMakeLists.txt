@@ -8,14 +8,14 @@ configure_file(../daemon.init.in init @ONLY)
 configure_file(../daemon.default.in default)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mfsmetalogger.cfg
-        DESTINATION ${ETC_SUBDIR}/mfs
+        DESTINATION ${ETC_PATH}/mfs
         RENAME mfsmetalogger.cfg.dist
         COMPONENT ${COMPONENT_NAME})
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/init
-        DESTINATION ${ETC_SUBDIR}/init.d
+        DESTINATION ${ETC_PATH}/init.d
         RENAME lizardfs-${DAEMON_NAME}
         COMPONENT ${COMPONENT_NAME})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/default
-        DESTINATION ${ETC_SUBDIR}/default
+        DESTINATION ${ETC_PATH}/default
         RENAME lizardfs-${DAEMON_NAME}
         COMPONENT ${COMPONENT_NAME})
