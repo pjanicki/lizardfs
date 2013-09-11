@@ -39,42 +39,33 @@ message(STATUS "ENABLE_DEBIAN_PATHS: ${ENABLE_DEBIAN_PATHS}")
 message(STATUS "BUILD_DEB: ${BUILD_DEB}")
 message(STATUS "BUILD_RPM: ${BUILD_RPM}")
 
-# Sync installation prefixes to have proper absolute paths *_PATH
-# when building package or installing from sources
-set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-if(CPACK_PACKAGING_INSTALL_PREFIX STREQUAL "")
-  set(CPACK_PACKAGING_INSTALL_PREFIX "/.")
-endif()
+# Fix to sync installation prefixes to avoid problems with scripts using
+# absolute paths (eg. SBIN_PATH in init.d scripts). Without this fix depending
+# after cmake call only one make install or make package will produce proper 
+# absolute paths in output
+# set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+# if(CPACK_PACKAGING_INSTALL_PREFIX STREQUAL "")
+#   set(CPACK_PACKAGING_INSTALL_PREFIX "/.")
+# endif()
 
 # Switches
-if(ENABLE_DEBIAN_PATHS)
-  if (NOT CMAKE_INSTALL_PREFIX STREQUAL "/")
-    message(WARNING "Debian paths enabled, but CMAKE_INSTALL_PREFIX is different than /")
-  endif()
-  set(BIN_SUBDIR   "usr/bin")
-  set(SBIN_SUBDIR  "usr/sbin")
-  set(ETC_SUBDIR   "etc")
-  set(RUN_SUBDIR   "var/run/mfs")
-  set(DATA_SUBDIR  "var/lib/mfs")
-  set(MAN_SUBDIR   "usr/share/man")
-  set(CGI_SUBDIR   "usr/share/mfscgi")
-else()
+# if(ENABLE_DEBIAN_PATHS)
+#   if (NOT CMAKE_INSTALL_PREFIX STREQUAL "/")
+#     message(WARNING "Debian paths enabled, but CMAKE_INSTALL_PREFIX is different than /")
+#   endif()
+#   set(BIN_SUBDIR   "usr/bin")
+#   set(SBIN_SUBDIR  "usr/sbin")
+# else()
   set(BIN_SUBDIR   "bin")
   set(SBIN_SUBDIR  "sbin")
-  set(ETC_SUBDIR   "etc")
-  set(RUN_SUBDIR   "var/run/mfs")
-  set(DATA_SUBDIR  "var/lib/mfs")
-  set(MAN_SUBDIR   "share/man")
-  set(CGI_SUBDIR   "share/mfscgi")
-endif()
-set(BIN_PATH   ${CMAKE_INSTALL_PREFIX}/${BIN_SUBDIR})
-set(SBIN_PATH  ${CMAKE_INSTALL_PREFIX}/${SBIN_SUBDIR})
-set(ETC_PATH   ${CMAKE_INSTALL_PREFIX}/${ETC_SUBDIR})
-set(RUN_PATH   ${CMAKE_INSTALL_PREFIX}/${RUN_SUBDIR})
-set(DATA_PATH  ${CMAKE_INSTALL_PREFIX}/${DATA_SUBDIR})
-set(MAN_PATH   ${CMAKE_INSTALL_PREFIX}/${MAN_SUBDIR})
-set(CGI_PATH   ${CMAKE_INSTALL_PREFIX}/${CGI_SUBDIR})
+# endif()
 
+set(ETC_PATH   "/etc")
+set(RUN_PATH   "/var/run/mfs")
+set(DATA_PATH  "/var/lib/mfs")
+set(MAN_PATH   "/usr/share/man")
+set(CGI_PATH   "/usr/share/mfscgi")
+  
 if(ENABLE_LIGHTMFS)
   set(PROTO_BASE 65536)
   set(LIGHT_MFS 1)
@@ -88,11 +79,6 @@ set(CHARTS_CSV_CHARTID_BASE 90000)
 
 ## All the environment tests (libs, includes, etc.) live here:
 include(EnvTests.cmake)
-
-# Create config.h file
-set(DATA_PATH "${CMAKE_INSTALL_PREFIX}/${DATA_SUBDIR}")
-set(ETC_PATH  "${CMAKE_INSTALL_PREFIX}/${ETC_SUBDIR}")
-set(RUN_PATH  "${CMAKE_INSTALL_PREFIX}/${RUN_SUBDIR}")
 
 configure_file(config.h.in config.h)
 include_directories(${CMAKE_BINARY_DIR}) # Here we have generated config.h
