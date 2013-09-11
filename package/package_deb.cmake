@@ -1,3 +1,7 @@
+set_system_architecture(YES)
+set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY NO)
+set(GENERATOR "DEB")
+
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Marcin Sulikowski <contact@lizardfs.org>")
 set(CPACK_DEBIAN_PACKAGE_SECTION "admin")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY "extra")
