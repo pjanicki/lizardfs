@@ -1,9 +1,9 @@
 # Set SYSTEM_ARCHITECTURE with current system architecture #
 ############################################################
 
-function(set_system_architecture FOR_DEB)
-
-  if(FOR_DEB)
+function(set_system_architecture TARGET_GENERATOR)
+  string(TOUPPER ${TARGET_GENERATOR} TARGET_GENERATOR)
+  if(TARGET_GENERATOR STREQUAL "DEB")
     # Use 'dpkg'
     execute_process(COMMAND dpkg --print-architecture TIMEOUT 1 RESULT_VARIABLE RETURN_CODE OUTPUT_VARIABLE SYSARCH)
   else()
