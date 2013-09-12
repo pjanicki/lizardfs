@@ -1,4 +1,4 @@
-set_system_architecture(NO)
+set_system_architecture("TGZ")
 set(CPACK_SET_DESTDIR TRUE)
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY YES)
 set(GENERATOR "TGZ")

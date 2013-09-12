@@ -1,5 +1,5 @@
 set(GENERATOR "RPM")
-set_system_architecture(NO)
+set_system_architecture("RPM")
 set(CPACK_RPM_COMPONENT_INSTALL YES)
 
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY NO)

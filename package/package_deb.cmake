@@ -1,5 +1,5 @@
 set(GENERATOR "DEB")
-set_system_architecture(YES)
+set_system_architecture("DEBIAN")
 set(CPACK_DEB_COMPONENT_INSTALL YES)
 
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY NO)
